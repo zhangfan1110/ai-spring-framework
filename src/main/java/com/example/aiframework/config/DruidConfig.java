@@ -29,7 +29,6 @@ public class DruidConfig {
         initParams.put("loginPassword", "admin123");
         initParams.put("resetEnable", "false");
         initParams.put("allow", "127.0.0.1");
-        
         registration.setInitParameters(initParams);
         return registration;
     }
