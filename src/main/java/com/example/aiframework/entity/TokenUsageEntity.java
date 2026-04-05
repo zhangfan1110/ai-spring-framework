@@ -1,14 +1,12 @@
 package com.example.aiframework.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
  * Token 使用统计实体
  */
-@Data
 @TableName("ai_token_usage")
 public class TokenUsageEntity {
 
@@ -73,4 +71,101 @@ public class TokenUsageEntity {
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Integer getInputTokens() {
+        return inputTokens;
+    }
+
+    public void setInputTokens(Integer inputTokens) {
+        this.inputTokens = inputTokens;
+    }
+
+    public Integer getOutputTokens() {
+        return outputTokens;
+    }
+
+    public void setOutputTokens(Integer outputTokens) {
+        this.outputTokens = outputTokens;
+    }
+
+    public Integer getTotalTokens() {
+        return totalTokens;
+    }
+
+    public void setTotalTokens(Integer totalTokens) {
+        this.totalTokens = totalTokens;
+    }
+
+    public String getCallType() {
+        return callType;
+    }
+
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public Long getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Long responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
 }

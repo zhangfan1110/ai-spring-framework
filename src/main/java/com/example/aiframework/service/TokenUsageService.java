@@ -3,8 +3,9 @@ package com.example.aiframework.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.aiframework.entity.TokenUsageEntity;
 import com.example.aiframework.mapper.TokenUsageMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,12 +17,13 @@ import java.util.Map;
 /**
  * Token 使用统计服务
  */
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class TokenUsageService {
 
-    private final TokenUsageMapper tokenUsageMapper;
+    private static final Logger log = LoggerFactory.getLogger(TokenUsageService.class);
+    
+    @Autowired
+    private TokenUsageMapper tokenUsageMapper;
 
     /**
      * 记录一次 Token 使用

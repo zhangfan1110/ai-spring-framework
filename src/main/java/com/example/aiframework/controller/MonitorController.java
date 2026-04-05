@@ -5,7 +5,7 @@ import com.example.aiframework.service.TokenUsageService;
 import com.example.aiframework.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +18,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/monitor")
 @Tag(name = "监控统计", description = "性能监控和 Token 使用统计")
-@RequiredArgsConstructor
 public class MonitorController {
 
-    private final TokenUsageService tokenUsageService;
-    private final PerformanceMonitorService performanceMonitorService;
+    @Autowired
+    private TokenUsageService tokenUsageService;
+
+    @Autowired
+    private PerformanceMonitorService performanceMonitorService;
 
     @Operation(summary = "获取今日 Token 使用统计")
     @GetMapping("/token/today")

@@ -1,6 +1,7 @@
 package com.example.aiframework.service;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -10,9 +11,10 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 性能监控服务
  */
-@Slf4j
 @Service
 public class PerformanceMonitorService {
+
+    private static final Logger log = LoggerFactory.getLogger(PerformanceMonitorService.class);
 
     /**
      * 调用链执行时间统计
