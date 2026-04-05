@@ -1,16 +1,19 @@
 package com.example.aiframework.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 /**
  * 会话导出元数据
  */
-@Setter
-@Getter
 public class ChatSessionExportDTO_ExportMetadata {
     private String version;
-    private java.time.LocalDateTime exportTime;
+    private LocalDateTime exportTime;
     private String exportedBy;
-
+    
+    public String getVersion() { return version; }
+    public void setVersion(String version) { this.version = version; }
+    public LocalDateTime getExportTime() { return exportTime; }
+    public void setExportTime(LocalDateTime exportTime) { this.exportTime = exportTime; }
+    public String getExportedBy() { return exportedBy; }
+    public void setExportedBy(String exportedBy) { this.exportedBy = exportedBy; }
 }

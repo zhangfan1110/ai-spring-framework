@@ -1,15 +1,10 @@
 package com.example.aiframework.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
- * 会话合并请求 DTO - 手动实现 getter/setter
+ * 会话合并请求 DTO
  */
-@Setter
-@Getter
 public class ChatSessionMergeRequestDTO {
     
     private String targetSessionId;
@@ -18,6 +13,18 @@ public class ChatSessionMergeRequestDTO {
     private String newTitle;
     
     public ChatSessionMergeRequestDTO() {}
+
+    public String getTargetSessionId() { return targetSessionId; }
+    public void setTargetSessionId(String targetSessionId) { this.targetSessionId = targetSessionId; }
+    
+    public List<String> getSourceSessionIds() { return sourceSessionIds; }
+    public void setSourceSessionIds(List<String> sourceSessionIds) { this.sourceSessionIds = sourceSessionIds; }
+    
+    public boolean isKeepSourceSessions() { return keepSourceSessions; }
+    public void setKeepSourceSessions(boolean keepSourceSessions) { this.keepSourceSessions = keepSourceSessions; }
+    
+    public String getNewTitle() { return newTitle; }
+    public void setNewTitle(String newTitle) { this.newTitle = newTitle; }
 
     public static Builder builder() { return new Builder(); }
     

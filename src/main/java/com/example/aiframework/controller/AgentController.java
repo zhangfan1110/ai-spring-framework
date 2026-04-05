@@ -204,7 +204,7 @@ public class AgentController {
         
         List<Map<String, Object>> templates = new ArrayList<>();
         for (ChainTemplate template : templateService.getAllTemplates()) {
-            Map<String, Object> templateInfo = new HashMap<>();
+            Map<String, Object> templateInfo = new HashMap<>(16);
             templateInfo.put("id", template.getId());
             templateInfo.put("name", template.getName());
             templateInfo.put("description", template.getDescription());
@@ -228,7 +228,7 @@ public class AgentController {
             return Result.error("模板不存在：" + templateId);
         }
         
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>(16);
         response.put("id", template.getId());
         response.put("name", template.getName());
         response.put("description", template.getDescription());
