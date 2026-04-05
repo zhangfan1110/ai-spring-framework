@@ -1,7 +1,7 @@
 package com.example.aiframework.controller;
 
 import com.example.aiframework.service.LocalModelService;
-import com.example.aiframework.service.LocalModelService_ModelResponse;
+import com.example.aiframework.dto.LocalModelService_ModelResponse;
 import com.example.aiframework.service.LocalModelService.StreamCallback;
 import com.example.aiframework.util.Result;
 import io.swagger.v3.oas.annotations.Operation;

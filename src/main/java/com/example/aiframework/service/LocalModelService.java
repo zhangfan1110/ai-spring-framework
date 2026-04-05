@@ -1,5 +1,7 @@
 package com.example.aiframework.service;
 
+import com.example.aiframework.dto.LocalModelService_ModelResponse;
+import com.example.aiframework.dto.LocalModelService_OllamaChatRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
