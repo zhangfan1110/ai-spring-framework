@@ -1,64 +1,159 @@
 package com.example.aiframework.interceptor;
 
-import com.example.aiframework.exception.BusinessException;
-import com.example.aiframework.util.RateLimiter;
+import com.example.aiframework.annotation.LimitType;
+import com.example.aiframework.annotation.RateLimit;
+import com.example.aiframework.service.RateLimitService;
+import com.example.aiframework.util.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.concurrent.TimeUnit;
+import java.lang.reflect.Method;
 
 /**
  * 限流拦截器
  */
 @Component
 public class RateLimitInterceptor implements HandlerInterceptor {
-    
-    private static final Logger log = LoggerFactory.getLogger(RateLimitInterceptor.class);
-    
-    private final RateLimiter rateLimiter;
-    
-    public RateLimitInterceptor() {
-        // 每分钟最多 60 次请求
-        this.rateLimiter = new RateLimiter(60, 1, TimeUnit.MINUTES);
-    }
-    
+
+    @Autowired
+    private RateLimitService rateLimitService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String clientIp = getClientIp(request);
-        String uri = request.getRequestURI();
-        
-        // 健康检查不限流
-        if (uri.contains("/health")) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-        
-        // 限流 key: IP + URI
-        String key = clientIp + ":" + uri;
-        
-        if (!rateLimiter.allowRequest(key)) {
-            int remaining = rateLimiter.getRemainingRequests(key);
-            log.warn("限流触发 - IP: {}, URI: {}, 剩余：{}", clientIp, uri, remaining);
-            throw new BusinessException(429, "请求过于频繁，请稍后再试 (剩余：" + remaining + ")");
+
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        Method method = handlerMethod.getMethod();
+
+        // 检查方法或类上是否有 @RateLimit 注解
+        RateLimit rateLimit = method.getAnnotation(RateLimit.class);
+        if (rateLimit == null) {
+            rateLimit = handlerMethod.getBeanType().getAnnotation(RateLimit.class);
         }
-        
+
+        if (rateLimit == null) {
+            return true;
+        }
+
+        // 生成限流 key
+        String limitKey = generateLimitKey(request, rateLimit);
+
+        // 尝试获取令牌
+        boolean allowed = rateLimitService.tryAcquire(
+            limitKey,
+            rateLimit.maxRequests(),
+            rateLimit.time(),
+            rateLimit.timeUnit()
+        );
+
+        if (!allowed) {
+            // 返回 429 Too Many Requests
+            response.setStatus(429);
+            response.setContentType("application/json;charset=UTF-8");
+            
+            Result<?> result = Result.error(rateLimit.message());
+            response.getWriter().write(objectMapper.writeValueAsString(result));
+            
+            return false;
+        }
+
+        // 将剩余次数添加到响应头
+        Long remaining = rateLimitService.getRemainingRequests(limitKey, rateLimit.maxRequests());
+        response.setHeader("X-RateLimit-Remaining", String.valueOf(remaining));
+        response.setHeader("X-RateLimit-Limit", String.valueOf(rateLimit.maxRequests()));
+
         return true;
     }
-    
+
+    /**
+     * 生成限流 key
+     */
+    private String generateLimitKey(HttpServletRequest request, RateLimit rateLimit) {
+        StringBuilder keyBuilder = new StringBuilder();
+        
+        // 添加接口路径
+        String apiPath = request.getRequestURI();
+        keyBuilder.append("api:").append(apiPath.replace("/", ":"));
+        
+        // 根据限流类型添加标识
+        switch (rateLimit.limitType()) {
+            case IP:
+                String ip = getClientIp(request);
+                keyBuilder.append(":ip:").append(ip);
+                break;
+                
+            case USER:
+                String userId = getCurrentUserId();
+                if (StringUtils.hasText(userId)) {
+                    keyBuilder.append(":user:").append(userId);
+                } else {
+                    // 未登录用户使用 IP
+                    keyBuilder.append(":ip:").append(getClientIp(request));
+                }
+                break;
+                
+            case GLOBAL:
+                keyBuilder.append(":global");
+                break;
+                
+            case API:
+                // 仅按接口限流，不区分用户
+                break;
+        }
+
+        return keyBuilder.toString();
+    }
+
     /**
      * 获取客户端 IP
      */
     private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+        
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+        
+        if (!StringUtils.hasText(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
+        
+        // 多个 IP 时取第一个
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        
         return ip;
+    }
+
+    /**
+     * 获取当前用户 ID
+     */
+    private String getCurrentUserId() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof org.springframework.security.core.userdetails.User) {
+                    return ((org.springframework.security.core.userdetails.User) principal).getUsername();
+                }
+            }
+        } catch (Exception e) {
+            // 忽略异常，返回 null
+        }
+        return null;
     }
 }

@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `sys_role_permission` (
 
 -- 默认管理员账号（密码：admin123）
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `email`, `status`) VALUES
-('1', 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iDJ5LX0sTzCzS5qY9hXGJvqK3jW2', '系统管理员', 'admin@example.com', 1);
+('1', 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '系统管理员', 'admin@example.com', 1);
 
 -- 角色
 INSERT INTO `sys_role` (`id`, `role_code`, `role_name`, `description`, `status`) VALUES
