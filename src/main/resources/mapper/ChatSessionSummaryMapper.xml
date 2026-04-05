@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.aiframework.mapper.ChatSessionSummaryMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.aiframework.entity.ChatSessionSummaryEntity">
+        <id column="id" property="id"/>
+        <result column="session_id" property="sessionId"/>
+        <result column="summary" property="summary"/>
+        <result column="key_points" property="keyPoints"/>
+        <result column="start_message_id" property="startMessageId"/>
+        <result column="end_message_id" property="endMessageId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 按会话 ID 查询摘要 -->
+    <select id="selectBySessionId" resultMap="BaseResultMap">
+        SELECT * FROM chat_session_summaries
+        WHERE session_id = #{sessionId}
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+    <!-- 查询会话的所有摘要 -->
+    <select id="selectBySessionIdOrderByTime" resultMap="BaseResultMap">
+        SELECT * FROM chat_session_summaries
+        WHERE session_id = #{sessionId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 删除指定会话的摘要 -->
+    <delete id="deleteBySessionId">
+        DELETE FROM chat_session_summaries WHERE session_id = #{sessionId}
+    </delete>
+
+</mapper>

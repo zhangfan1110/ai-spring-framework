@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.aiframework.mapper.ChatMessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.aiframework.entity.ChatMessageEntity">
+        <id column="id" property="id"/>
+        <result column="session_id" property="sessionId"/>
+        <result column="role" property="role"/>
+        <result column="content" property="content"/>
+        <result column="model" property="model"/>
+        <result column="tokens" property="tokens"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 按会话 ID 查询消息列表 -->
+    <select id="selectBySessionId" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 按会话 ID 查询最近 N 条消息 -->
+    <select id="selectBySessionIdLimit" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 删除指定会话的所有消息 -->
+    <delete id="deleteBySessionId">
+        DELETE FROM chat_messages WHERE session_id = #{sessionId}
+    </delete>
+
+    <!-- 删除指定时间之前的消息 -->
+    <delete id="deleteBeforeTime">
+        DELETE FROM chat_messages WHERE create_time &lt; #{beforeTime}
+    </delete>
+
+    <!-- 搜索消息（按关键词匹配内容） -->
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        AND content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 搜索消息（按关键词匹配内容，不限会话） -->
+    <select id="searchByKeywordGlobal" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 按角色和关键词搜索 -->
+    <select id="searchByRoleAndKeyword" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        AND role = #{role}
+        AND content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 按时间范围搜索 -->
+    <select id="searchByTimeRange" resultMap="BaseResultMap">
+        SELECT * FROM chat_messages
+        WHERE session_id = #{sessionId}
+        AND create_time &gt;= #{startTime}
+        AND create_time &lt;= #{endTime}
+        ORDER BY create_time DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

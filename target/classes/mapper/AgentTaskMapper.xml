@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.aiframework.mapper.AgentTaskMapper">
+
+    <resultMap id="TaskResultMap" type="com.example.aiframework.entity.AgentTaskEntity">
+        <id column="id" property="id"/>
+        <result column="task_type" property="taskType"/>
+        <result column="task_input" property="taskInput"/>
+        <result column="status" property="status"/>
+        <result column="result" property="result"/>
+        <result column="error_message" property="errorMessage"/>
+        <result column="progress" property="progress"/>
+        <result column="current_step" property="currentStep"/>
+        <result column="started_at" property="startedAt"/>
+        <result column="completed_at" property="completedAt"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 查询任务列表 -->
+    <select id="selectTaskList" resultMap="TaskResultMap">
+        SELECT * FROM agent_tasks
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 清理旧任务 -->
+    <delete id="deleteOldTasks">
+        DELETE FROM agent_tasks
+        WHERE status IN ('COMPLETED', 'FAILED', 'CANCELLED')
+        AND created_at &lt; #{beforeTime}
+    </delete>
+
+</mapper>

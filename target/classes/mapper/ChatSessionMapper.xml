@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.aiframework.mapper.ChatSessionMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.aiframework.entity.ChatSessionEntity">
+        <id column="session_id" property="sessionId"/>
+        <result column="title" property="title"/>
+        <result column="message_count" property="messageCount"/>
+        <result column="last_active_time" property="lastActiveTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 查询所有会话 (按最后活跃时间排序) -->
+    <select id="selectAllOrderByLastActive" resultMap="BaseResultMap">
+        SELECT * FROM chat_sessions
+        ORDER BY last_active_time DESC
+    </select>
+
+    <!-- 查询最近活跃的会话 -->
+    <select id="selectRecentSessions" resultMap="BaseResultMap">
+        SELECT * FROM chat_sessions
+        ORDER BY last_active_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 删除指定会话 -->
+    <delete id="deleteBySessionId">
+        DELETE FROM chat_sessions WHERE session_id = #{sessionId}
+    </delete>
+
+    <!-- 删除指定时间之前的会话 -->
+    <delete id="deleteBeforeTime">
+        DELETE FROM chat_sessions WHERE create_time &lt; #{beforeTime}
+    </delete>
+
+</mapper>
