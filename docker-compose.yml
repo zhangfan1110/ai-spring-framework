@@ -12,30 +12,7 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - ai-network
-  redis:
-    image: redis:7-alpine
-    container_name: ai-framework-redis
-    ports:
-      - "6379:6379"
-    networks:
-      - ai-network
-  app:
-    build: .
-    container_name: ai-framework-app
-    ports:
-      - "8081:8081"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ai_framework
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=MyNewPass123!
-      - SPRING_REDIS_HOST=redis
-    depends_on:
-      - mysql
-      - redis
-    networks:
-      - ai-network
 volumes:
   mysql_data:
-  redis_data:
 networks:
   ai-network:

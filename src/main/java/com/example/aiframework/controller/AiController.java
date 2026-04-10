@@ -10,6 +10,9 @@ import com.example.aiframework.service.ChatService;
 import com.example.aiframework.service.RagMemoryService;
 import com.example.aiframework.service.SessionSummaryService;
 import com.example.aiframework.util.Result;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -20,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * AI 聊天接口
@@ -34,12 +39,18 @@ public class AiController {
     
     @Autowired
     private ChatService chatService;
-    
+
     @Autowired(required = false)
     private SessionSummaryService sessionSummaryService;
-    
+
     @Autowired(required = false)
     private RagMemoryService ragMemoryService;
+
+    @Autowired
+    private ChatLanguageModel chatModel;
+
+    @Autowired(required = false)
+    private Map<String, ChatLanguageModel> chatModelMap;
     
     @Operation(summary = "聊天", description = "与 AI 进行对话，支持会话记忆")
     @PostMapping("/chat")
@@ -47,6 +58,42 @@ public class AiController {
         log.info("收到聊天请求：{}", request.getMessage());
         ChatResponse response = chatService.chat(request);
         return Result.success(response);
+    }
+
+    @Operation(summary = "简单对话", description = "直接调用大模型回答，不涉及会话记忆、向量库、数据库等")
+    @PostMapping("/simple-chat")
+    public Result<ChatResponse> simpleChat(@RequestBody ChatRequest request) {
+        log.info("收到简单对话请求：{}, model: {}", request.getMessage(), request.getModel());
+
+        long startTime = System.currentTimeMillis();
+
+        // 选择模型
+        ChatLanguageModel model = chatModel;
+        if (request.getModel() != null && !request.getModel().isEmpty() && chatModelMap != null) {
+            ChatLanguageModel selected = chatModelMap.get(request.getModel());
+            if (selected != null) {
+                model = selected;
+            }
+        }
+
+        // 构建消息
+        List<dev.langchain4j.data.message.ChatMessage> messages = new ArrayList<>();
+        if (request.getSystemPrompt() != null && !request.getSystemPrompt().isEmpty()) {
+            messages.add(dev.langchain4j.data.message.SystemMessage.from(request.getSystemPrompt()));
+        }
+        messages.add(UserMessage.from(request.getMessage()));
+
+        // 直接调用模型
+        String response = model.generate(messages).content().text();
+
+        long duration = System.currentTimeMillis() - startTime;
+
+        return Result.success(ChatResponse.builder()
+                .content(response)
+                .model(request.getModel() != null ? request.getModel() : "default")
+                .duration(duration)
+                .timestamp(java.time.LocalDateTime.now())
+                .build());
     }
     
     @Operation(summary = "清空会话", description = "清空指定会话的历史记录")

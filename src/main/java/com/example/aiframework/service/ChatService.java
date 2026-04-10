@@ -14,12 +14,14 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -35,6 +37,9 @@ public class ChatService {
     
     @Resource
     private ChatLanguageModel chatModel;
+
+    @Autowired(required = false)
+    private Map<String, ChatLanguageModel> chatModelMap;
     
     @Autowired
     private ChatMessageRepository messageRepository;
@@ -89,11 +94,14 @@ public class ChatService {
         
         // 构建消息列表 (从数据库或缓存加载历史)
         List<dev.langchain4j.data.message.ChatMessage> messages = buildMessages(request, query);
-        
+
+        // 获取对应模型
+        ChatLanguageModel activeModel = resolveModel(request.getModel());
+
         // 调用模型
         String response;
-        if (chatModel != null) {
-            dev.langchain4j.model.output.Response<AiMessage> aiResponse = chatModel.generate(messages);
+        if (activeModel != null) {
+            dev.langchain4j.model.output.Response<AiMessage> aiResponse = activeModel.generate(messages);
             response = aiResponse.content().text();
         } else {
             response = "[演示模式] 我收到了您的消息：" + request.getMessage();
@@ -243,6 +251,20 @@ public class ChatService {
 
     
     /**
+     * 根据请求中的模型名称获取对应的 ChatLanguageModel
+     */
+    private ChatLanguageModel resolveModel(String requestedModel) {
+        if (requestedModel != null && !requestedModel.isEmpty() && chatModelMap != null) {
+            ChatLanguageModel model = chatModelMap.get(requestedModel);
+            if (model != null) {
+                return model;
+            }
+            log.warn("未找到指定模型: {}，使用默认模型", requestedModel);
+        }
+        return chatModel;
+    }
+
+    /**
      * 转换实体为 LangChain4j 消息
      */
     private dev.langchain4j.data.message.ChatMessage toLangChainMessage(ChatMessageEntity entity) {
@@ -337,12 +359,15 @@ public class ChatService {
         
         // 构建消息列表
         List<dev.langchain4j.data.message.ChatMessage> messages = buildMessages(request, query);
-        
+
+        // 获取对应模型
+        ChatLanguageModel activeModel = resolveModel(request.getModel());
+
         // 调用模型获取完整响应
         StringBuilder fullResponse = new StringBuilder();
-        
-        if (chatModel != null) {
-            dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage> aiResponse = chatModel.generate(messages);
+
+        if (activeModel != null) {
+            dev.langchain4j.model.output.Response<dev.langchain4j.data.message.AiMessage> aiResponse = activeModel.generate(messages);
             String response = aiResponse.content().text();
             fullResponse.append(response);
             

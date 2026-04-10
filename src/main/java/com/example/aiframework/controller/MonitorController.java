@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -88,5 +89,29 @@ public class MonitorController {
     public Result<String> resetStats() {
         performanceMonitorService.resetStats();
         return Result.success("性能统计已重置");
+    }
+    
+    @Operation(summary = "获取系统信息")
+    @GetMapping("/system")
+    public Result<Map<String, Object>> getSystemInfo() {
+        Map<String, Object> info = new HashMap<>();
+        
+        // JVM 信息
+        info.put("javaVersion", System.getProperty("java.version"));
+        info.put("osName", System.getProperty("os.name"));
+        info.put("osArch", System.getProperty("os.arch"));
+        info.put("availableProcessors", Runtime.getRuntime().availableProcessors());
+        
+        // 内存信息
+        Runtime runtime = Runtime.getRuntime();
+        info.put("maxMemory", runtime.maxMemory() / 1024 / 1024 + " MB");
+        info.put("totalMemory", runtime.totalMemory() / 1024 / 1024 + " MB");
+        info.put("freeMemory", runtime.freeMemory() / 1024 / 1024 + " MB");
+        
+        // 运行时间
+        long uptime = java.lang.management.ManagementFactory.getRuntimeMXBean().getUptime();
+        info.put("uptime", uptime / 1000);
+        
+        return Result.success(info);
     }
 }

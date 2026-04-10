@@ -11,7 +11,16 @@ spring:
     password: MyNewPass123!
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-
+  
+  # Flyway 数据库迁移配置
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: true
+    encoding: UTF-8
+  
   # Druid 配置
   druid:
     # 初始化连接数
@@ -120,7 +129,16 @@ langchain4j:
     # 视觉模型配置
     vision-model: ${QWEN_VISION_MODEL:qwen-vl-max}
     vision-base-url: ${QWEN_VISION_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}
-  
+
+  # 小米 MiMo v2 Pro 配置
+  mimo:
+    enabled: true
+    api-key: ${MIMO_API_KEY:tp-ccqd51o52scgutf8rjfy24ihd7ilg7g6imhlldnz43drk35v}
+    base-url: ${MIMO_BASE_URL:https://token-plan-cn.xiaomimimo.com/v1}
+    model-name: ${MIMO_MODEL:mimo-v2-pro}
+    temperature: 0.7
+    timeout: 60s
+
   # Ollama 配置 (开源模型)
   ollama:
     enabled: true  # 启用开源模型时改为 true
