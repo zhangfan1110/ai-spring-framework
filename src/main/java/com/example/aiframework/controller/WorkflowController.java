@@ -1,13 +1,13 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.entity.WorkflowDefinitionEntity;
-import com.example.aiframework.entity.WorkflowInstanceEntity;
-import com.example.aiframework.entity.WorkflowNodeInstanceEntity;
-import com.example.aiframework.mapper.WorkflowInstanceMapper;
-import com.example.aiframework.mapper.WorkflowNodeInstanceMapper;
-import com.example.aiframework.service.WorkflowDefinitionService;
-import com.example.aiframework.service.WorkflowEngineService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.workflow.entity.WorkflowDefinitionEntity;
+import com.example.aiframework.workflow.entity.WorkflowInstanceEntity;
+import com.example.aiframework.workflow.entity.WorkflowNodeInstanceEntity;
+import com.example.aiframework.workflow.mapper.WorkflowInstanceMapper;
+import com.example.aiframework.workflow.mapper.WorkflowNodeInstanceMapper;
+import com.example.aiframework.workflow.service.WorkflowDefinitionService;
+import com.example.aiframework.workflow.service.WorkflowEngineService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

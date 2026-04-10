@@ -1,16 +1,16 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.dto.ChatSessionExportDTO;
-import com.example.aiframework.dto.ChatSessionMergeRequestDTO;
-import com.example.aiframework.dto.ChatSessionStatsDTO;
-import com.example.aiframework.entity.ChatMessageEntity;
-import com.example.aiframework.entity.ChatSessionEntity;
-import com.example.aiframework.entity.ChatSessionShareEntity;
-import com.example.aiframework.entity.ChatSessionTagEntity;
-import com.example.aiframework.entity.ChatSessionTemplateEntity;
-import com.example.aiframework.service.*;
-import com.example.aiframework.service.SessionShareService.ShareConfig;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.chat.dto.ChatSessionExportDTO;
+import com.example.aiframework.chat.dto.ChatSessionMergeRequestDTO;
+import com.example.aiframework.chat.dto.ChatSessionStatsDTO;
+import com.example.aiframework.chat.entity.ChatMessageEntity;
+import com.example.aiframework.chat.entity.ChatSessionEntity;
+import com.example.aiframework.chat.entity.ChatSessionShareEntity;
+import com.example.aiframework.chat.entity.ChatSessionTagEntity;
+import com.example.aiframework.chat.entity.ChatSessionTemplateEntity;
+import com.example.aiframework.chat.service.*;
+import com.example.aiframework.chat.service.SessionShareService.ShareConfig;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

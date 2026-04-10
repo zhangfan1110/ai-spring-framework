@@ -1,12 +1,12 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.entity.KnowledgeBaseEntity;
-import com.example.aiframework.entity.KnowledgeDocumentEntity;
-import com.example.aiframework.mapper.KnowledgeDocumentMapper;
-import com.example.aiframework.service.KnowledgeBaseService;
-import com.example.aiframework.service.KnowledgeSearchService;
-import com.example.aiframework.service.KnowledgeSearchService.SearchResult;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.knowledge.entity.KnowledgeBaseEntity;
+import com.example.aiframework.knowledge.entity.KnowledgeDocumentEntity;
+import com.example.aiframework.knowledge.mapper.KnowledgeDocumentMapper;
+import com.example.aiframework.knowledge.service.KnowledgeBaseService;
+import com.example.aiframework.knowledge.service.KnowledgeSearchService;
+import com.example.aiframework.knowledge.service.KnowledgeSearchService.SearchResult;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

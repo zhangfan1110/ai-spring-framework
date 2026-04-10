@@ -1,61 +1,23 @@
-# AI Spring Framework 🦐
+# AI Spring Framework
 
-基于 Spring Boot 3 + LangChain4j 的企业级 AI 应用框架，集成通义千问、Ollama 本地模型、向量数据库、RAG 记忆检索、多模态处理等能力。
+基于 Spring Boot 3 + LangChain4j 的企业级 AI 应用框架，集成通义千问、Ollama 本地模型、向量数据库、RAG 记忆检索、多模态处理、Agent 工作流等能力。
 
-## 📋 目录
+## 功能特性
 
-- [功能特性](#-功能特性)
-- [技术栈](#-技术栈)
-- [快速开始](#-快速开始)
-- [外部依赖配置](#-外部依赖配置)
-- [项目结构](#-项目结构)
-- [API 文档](#-api-文档)
-- [常见问题](#-常见问题)
+- **多 LLM 支持**: 通义千问 (云端)、小米 MiMo v2 Pro、Ollama (本地开源模型)
+- **RAG 检索增强**: 向量相似度 + 关键词 BM25 + RRF 融合 + Cross-Encoder 重排序
+- **Agent 系统**: ReAct 推理、工具调用链、多 Agent 协作、链模板管理
+- **16+ 内置工具**: 计算器、代码执行、搜索、天气、股票、翻译、邮件等
+- **多模态**: 图像识别 (Vision)、OCR、语音识别 (ASR)、语音合成 (TTS)、图像生成
+- **会话管理**: CRUD、分享、合并、模板、标签、收藏、摘要、导出/导入
+- **工作流引擎**: 可视化工作流定义、条件分支、并行执行
+- **知识库**: 文档上传、文本分块、向量化存储、语义检索
+- **企业特性**: JWT 认证、Spring Security、Redis 缓存、Druid 连接池、Flyway 迁移、Swagger 文档、Actuator 监控
 
----
+## 技术栈
 
-## ✨ 功能特性
-
-### 核心能力
-- **LLM 集成**: 通义千问 (云端) + Ollama (本地开源模型)
-- **RAG 记忆检索**: 向量相似度检索 + 关键词检索 + Cross-Encoder 重排序
-- **会话管理**: 聊天会话、消息收藏、会话分享、会话合并、会话模板
-- **Agent 工作流**: 可配置的任务链、ReAct 模式、工具调用
-- **多模态处理**: 图像识别、OCR、语音识别 (ASR)、语音合成 (TTS)
-
-### 工具系统
-内置 16+ 工具：
-- `CalculatorTool` - 数学计算
-- `CodeExecutorTool` - 代码执行
-- `DatabaseTool` - 数据库操作
-- `DateTimeTool` - 日期时间
-- `EmailTool` - 邮件发送
-- `FileTool` - 文件操作
-- `HttpTool` - HTTP 请求
-- `ImageTool` - 图片处理
-- `NewsTool` - 新闻查询
-- `PdfTool` - PDF 解析
-- `SearchTool` - 网络搜索
-- `ShellTool` - Shell 命令
-- `StockTool` - 股票查询
-- `TranslationTool` - 翻译
-- `WeatherTool` - 天气查询
-- `ToolManager` - 工具管理器
-
-### 企业特性
-- JWT 认证 + Spring Security
-- Redis 会话缓存
-- Druid 数据库连接池监控
-- MyBatis Plus ORM
-- Swagger/OpenAPI 文档
-- Actuator 监控端点
-
----
-
-## 🛠️ 技术栈
-
-| 组件 | 版本/技术 |
-|------|-----------|
+| 组件 | 版本 |
+|------|------|
 | Java | 21 |
 | Spring Boot | 3.2.4 |
 | LangChain4j | 0.30.0 |
@@ -63,522 +25,186 @@
 | MySQL | 8.0 |
 | Redis | 7 |
 | Milvus | 向量数据库 |
-| Lombok | 1.18.34 |
 
----
+## 快速开始
 
-## 🚀 快速开始
+### 环境要求
 
-### 1. 环境要求
+- Java 21+
+- Maven 3.8+
+- MySQL 8.0
+- Redis 7
 
-```bash
-# Java 21
-java -version
-
-# Maven 3.8+
-mvn -version
-
-# Docker & Docker Compose (可选，用于容器化部署)
-docker --version
-docker-compose --version
-```
-
-### 2. 启动基础设施
+### 启动
 
 ```bash
-# 使用 Docker Compose 启动 MySQL + Redis
-cd /Users/zhangfan/Desktop/ai-spring-framework
-docker-compose up -d mysql redis
-```
+# 1. 启动基础设施
+docker-compose up -d
 
-### 3. 配置环境变量
-
-```bash
-# 复制配置模板
-cp src/main/resources/application.yml src/main/resources/application-local.yml
-
-# 编辑配置 (可选，默认配置已可用)
-vim src/main/resources/application-local.yml
-```
-
-### 4. 运行应用
-
-```bash
-# 方式一：Maven 运行
+# 2. 运行应用
 mvn spring-boot:run
 
-# 方式二：打包后运行
-mvn clean package -DskipTests
-java -jar target/ai-spring-framework-1.0.0-SNAPSHOT.jar
-
-# 方式三：IDE 直接运行 Application.java
+# 3. 访问
+# Swagger UI:  http://localhost:8081/swagger-ui.html
+# Druid 监控:  http://localhost:8081/druid/ (admin / admin123)
+# 健康检查:    http://localhost:8081/actuator/health
 ```
 
-### 5. 验证启动
+## 项目结构
 
-访问：
-- API 文档：http://localhost:8081/swagger-ui.html
-- Druid 监控：http://localhost:8081/druid/ (账号：admin / 密码：admin123)
-- 健康检查：http://localhost:8081/actuator/health
-
----
-
-## ⚙️ 外部依赖配置
-
-### 必需服务
-
-| 服务 | 端口 | 说明 | 配置项 |
-|------|------|------|--------|
-| MySQL | 3306 | 数据库 | `spring.datasource.*` |
-| Redis | 6379 | 缓存/会话 | `spring.data.redis.*` |
-
-### 可选服务
-
-| 服务 | 端口 | 说明 | 配置项 |
-|------|------|------|--------|
-| Milvus | 19530 | 向量数据库 | `milvus.*` |
-| Ollama | 11434 | 本地 LLM | `langchain4j.ollama.*` |
-
-### 🔧 功能模块依赖
-
-#### 1. OCR 文字识别
-
-**支持引擎**: Tesseract (默认) / PaddleOCR / EasyOCR / Azure
-
-```yaml
-ocr:
-  enabled: true
-  provider: tesseract  # tesseract/paddle/easyocr/azure
-  lang: chi_sim+eng    # 语言包
-```
-
-**安装步骤**:
-
-```bash
-# macOS - 安装 Tesseract
-brew install tesseract
-brew install tesseract-lang  # 多语言支持
-
-# 验证安装
-tesseract --version
-tesseract --list-langs
-
-# Linux (Ubuntu/Debian)
-sudo apt install tesseract-ocr
-sudo apt install tesseract-ocr-chi-sim tesseract-ocr-chi-tra tesseract-ocr-eng
-
-# 可选：安装 PaddleOCR (中文效果更好)
-pip install paddlepaddle paddleocr
-
-# 可选：安装 EasyOCR
-pip install easyocr
-```
-
-**语言包对照表**:
-
-| 语言 | Tesseract | PaddleOCR | EasyOCR |
-|------|-----------|-----------|---------|
-| 简体中文 | `chi_sim` | `ch` | `ch_sim` |
-| 繁体中文 | `chi_tra` | `ch` | `ch_tra` |
-| 英文 | `eng` | `en` | `en` |
-| 日文 | `jpn` | `ja` | `ja` |
-| 韩文 | `kor` | `ko` | `ko` |
-
----
-
-#### 2. 语音识别 (ASR)
-
-**支持引擎**: Whisper (本地) / Whisper API
-
-```yaml
-asr:
-  enabled: true
-  provider: whisper-local  # whisper-local / whisper-api
-  model: tiny              # tiny/base/small/medium/large
-  language: zh             # zh/en/ja/ko 等
-```
-
-**安装步骤**:
-
-```bash
-# 安装 OpenAI Whisper
-pip install openai-whisper
-
-# 验证安装
-whisper --version
-
-# 测试识别
-whisper audio.mp3 --model tiny --language zh
-```
-
-**模型大小参考**:
-
-| 模型 | 大小 | 速度 | 准确率 |
-|------|------|------|--------|
-| tiny | 39M | 最快 | 一般 |
-| base | 74M | 快 | 较好 |
-| small | 244M | 中等 | 好 |
-| medium | 769M | 慢 | 很好 |
-| large | 1550M | 最慢 | 最佳 |
-
----
-
-#### 3. 语音合成 (TTS)
-
-**支持引擎**: Edge TTS (免费) / Azure / Google / 百度
-
-```yaml
-tts:
-  enabled: true
-  provider: edge  # edge/azure/google/baidu
-  voice: zh-CN-XiaoxiaoNeural
-  rate: 1.0       # 语速 0.5-2.0
-  pitch: 1.0      # 音调 0.5-2.0
-```
-
-**安装步骤**:
-
-```bash
-# 安装 Edge TTS (推荐，免费)
-pip install edge-tts
-
-# 验证安装
-edge-tts --version
-
-# 查看支持的语音
-edge-tts --list-voices
-
-# 测试合成
-edge-tts --voice zh-CN-XiaoxiaoNeural --text "你好，世界" --write-media test.mp3
-```
-
-**常用中文语音**:
-
-| 语音 ID | 性别 | 特点 |
-|---------|------|------|
-| `zh-CN-XiaoxiaoNeural` | 女 | 温暖、自然 |
-| `zh-CN-YunxiNeural` | 男 | 沉稳、专业 |
-| `zh-CN-YunyangNeural` | 男 | 新闻播报风格 |
-| `zh-CN-XiaoyiNeural` | 女 | 活泼 |
-| `zh-CN-Liaoning-XiaobeiNeural` | 女 | 东北话 |
-| `zh-CN-Shaanxi-XiaoniNeural` | 女 | 陕西话 |
-| `zh-HK-HiuMaanNeural` | 女 | 粤语 |
-
----
-
-#### 4. 图像生成
-
-```yaml
-image-gen:
-  enabled: true
-  provider: dall-e-3  # dall-e-3/stable-diffusion/midjourney
-  size: 1024x1024
-  quality: standard
-  style: vivid
-```
-
-**配置说明**:
-
-- **DALL-E 3**: 使用通义千问兼容接口，无需额外配置
-- **Stable Diffusion**: 需本地部署 SD WebUI 或 API
-- **Midjourney**: 需 Discord Bot 集成 (待实现)
-
----
-
-#### 5. 视觉识别 (Vision)
-
-```yaml
-langchain4j:
-  qwen:
-    vision-model: qwen-vl-max
-    vision-base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  
-  ollama:
-    vision-model: llava  # 本地视觉模型
-```
-
-**本地视觉模型**:
-
-```bash
-# 拉取 LLaVA 模型
-ollama pull llava
-
-# 或使用 qwen-vl
-ollama pull qwen-vl
-```
-
----
-
-#### 6. 向量数据库 (Milvus)
-
-```yaml
-milvus:
-  enabled: true
-  host: localhost
-  port: 19530
-  username: admin
-  password: sdlkg007
-```
-
-**启动 Milvus**:
-
-```bash
-# Docker 方式
-docker run -d \
-  --name milvus-standalone \
-  -p 19530:19530 \
-  -p 9091:9091 \
-  -v $(pwd)/milvus:/var/lib/milvus \
-  milvusdb/milvus:latest \
-  milvus run standalone
-```
-
----
-
-#### 7. Ollama 本地模型
-
-```yaml
-langchain4j:
-  ollama:
-    enabled: true
-    base-url: http://localhost:11434
-    model-name: deepseek-r1  # 文本模型
-    vision-model: llava      # 视觉模型
-```
-
-**安装 Ollama**:
-
-```bash
-# macOS
-brew install ollama
-
-# Linux
-curl -fsSL https://ollama.com/install.sh | sh
-
-# 启动服务
-ollama serve
-
-# 拉取模型
-ollama pull deepseek-r1      # 推理模型
-ollama pull qwen2.5          # 通用模型
-ollama pull llava            # 视觉模型
-ollama pull nomic-embed-text # Embedding 模型
-```
-
----
-
-## 📁 项目结构
+项目按业务领域组织，每个领域包含完整的 entity / mapper / repository / service / dto / model 分层。
 
 ```
-ai-spring-framework/
-├── src/main/java/com/example/aiframework/
-│   ├── Application.java          # 启动类
-│   ├── annotation/               # 自定义注解
-│   ├── config/                   # 配置类
-│   │   ├── DruidConfig.java
-│   │   ├── SecurityConfig.java
-│   │   └── ...
-│   ├── controller/               # REST 控制器
-│   │   ├── AgentController.java
-│   │   ├── AiController.java
-│   │   ├── AuthController.java
-│   │   ├── KnowledgeController.java
-│   │   ├── LocalModelController.java
-│   │   ├── MessageController.java
-│   │   ├── MilvusController.java
-│   │   ├── MonitorController.java
-│   │   ├── MultimediaController.java  # 多媒体 (OCR/ASR/TTS)
-│   │   ├── SessionController.java
-│   │   ├── SessionWebSocketController.java
-│   │   ├── SpeechController.java      # 语音相关
-│   │   ├── SystemController.java
-│   │   ├── TaskController.java
-│   │   ├── VisionController.java      # 视觉识别
-│   │   └── WorkflowController.java
-│   ├── dto/                      # 数据传输对象
-│   ├── entity/                   # 实体类
-│   ├── exception/                # 异常处理
-│   ├── interceptor/              # 拦截器
-│   ├── mapper/                   # MyBatis Mapper
-│   ├── model/                    # AI 模型封装
-│   ├── repository/               # 数据访问层
-│   ├── security/                 # 安全相关
-│   ├── service/                  # 业务逻辑层
-│   │   ├── OcrService.java           # OCR 服务
-│   │   ├── SpeechRecognitionService.java  # ASR 服务
-│   │   ├── TextToSpeechService.java     # TTS 服务
-│   │   ├── VisionService.java          # 视觉服务
-│   │   ├── ImageGenerationService.java # 图像生成
-│   │   ├── KnowledgeBaseService.java   # 知识库
-│   │   ├── RagMemoryService.java       # RAG 记忆
-│   │   ├── MilvusService.java          # 向量操作
-│   │   ├── ChatService.java            # 聊天
-│   │   ├── AuthService.java            # 认证
-│   │   └── ... (40+ 服务类)
-│   ├── tool/                     # Agent 工具
-│   │   ├── Tool.java
-│   │   ├── ToolManager.java
-│   │   ├── CalculatorTool.java
-│   │   ├── SearchTool.java
-│   │   ├── WeatherTool.java
-│   │   └── ... (16+ 工具)
-│   └── util/                     # 工具类
-│       ├── JwtUtil.java
-│       ├── Result.java
-│       └── ...
-├── src/main/resources/
-│   ├── application.yml           # 主配置文件
-│   └── mapper/**/*.xml           # MyBatis XML
-├── uploads/                      # 上传文件目录
-│   ├── audio/
-│   ├── ocr/
-│   ├── images/
-│   └── generated/
-├── docs/                         # 文档
-├── docker-compose.yml            # Docker 编排
-├── Dockerfile                    # Docker 镜像
-├── pom.xml                       # Maven 配置
-└── README.md                     # 本文件
+src/main/java/com/example/aiframework/
+├── Application.java                        # 启动类
+│
+├── common/                                 # 公共组件
+│   ├── annotation/                         #   自定义注解 (@RateLimit, @AsyncTask, LimitType)
+│   ├── exception/                          #   全局异常处理 (BusinessException, GlobalExceptionHandler)
+│   ├── interceptor/                        #   HTTP 拦截器 (限流、请求日志)
+│   ├── security/                           #   JWT 认证 (JwtFilter, UserDetailsService, JwtUtil)
+│   └── util/                               #   工具类 (Result, RateLimiter, PasswordGenerator)
+│
+├── config/                                 # 配置类
+│   ├── AiConfig.java                       #   AI/LLM 多模型配置
+│   ├── MilvusConfig.java                   #   Milvus 向量数据库 + Embedding 配置
+│   ├── data/                               #   数据层配置
+│   │   ├── RedisConfig.java                #     Redis 序列化配置
+│   │   ├── MybatisPlusConfig.java          #     MyBatis-Plus 分页 + MapperScan
+│   │   └── DruidConfig.java                #     Druid 连接池监控
+│   ├── web/                                #   Web 层配置
+│   │   ├── WebConfig.java                  #     CORS、拦截器注册
+│   │   ├── WebSocketConfig.java            #     STOMP WebSocket 端点
+│   │   └── RestTemplateConfig.java         #     HTTP 客户端
+│   ├── security/                           #   安全配置
+│   │   └── SecurityConfig.java             #     Spring Security 过滤链
+│   └── monitor/                            #   监控配置
+│       ├── ActuatorConfig.java             #     健康检查指示器
+│       └── SchedulerConfig.java            #     定时任务线程池
+│
+├── controller/                             # REST 控制器 (16 个)
+│   ├── AiController.java                   #   /api/ai          LLM 对话/补全
+│   ├── AgentController.java                #   /api/agent       Agent 链/工具调用
+│   ├── AuthController.java                 #   /api/auth        登录/注册
+│   ├── KnowledgeController.java            #   /api/knowledge   知识库 CRUD/检索
+│   ├── LocalModelController.java           #   /api/local-model Ollama 模型管理
+│   ├── MessageController.java              #   /api/message     消息 CRUD/收藏/搜索
+│   ├── MilvusController.java               #   /api/milvus      向量操作
+│   ├── MonitorController.java              #   /api/monitor     系统监控
+│   ├── MultimediaController.java           #   /api/multimedia  OCR/图像处理
+│   ├── SessionController.java              #   /api/session     会话 CRUD/分享/合并
+│   ├── SessionWebSocketController.java     #   WebSocket        实时聊天
+│   ├── SpeechController.java               #   /api/speech      ASR/TTS
+│   ├── SystemController.java               #   /api/system      系统信息
+│   ├── TaskController.java                 #   /api/task        异步任务队列
+│   ├── VisionController.java               #   /api/vision      图像识别
+│   └── WorkflowController.java             #   /api/workflow    工作流定义/执行
+│
+├── chat/                                   # 聊天/会话领域
+│   ├── entity/          (9)                #   ChatSession, ChatMessage, Summary, Tag, Favorite, Share, Template, Multimodal, TokenUsage
+│   ├── mapper/          (6)                #   MyBatis Mapper 接口
+│   ├── repository/      (7)                #   数据访问仓储
+│   ├── dto/             (7)                #   会话导出、合并、统计 DTO
+│   ├── model/           (3)                #   ChatRequest, ChatResponse, MessageEditRequest
+│   └── service/         (15)               #   ChatService, RagMemoryService, SessionSummary/Merge/Share/Template/Stats, Favorite, Search, TokenUsage, ExportImport, Cleanup 等
+│
+├── agent/                                  # Agent/工具链领域
+│   ├── entity/          (4)                #   AgentTask, AgentTaskLog, ChainTemplate, ChainTemplateNode
+│   ├── mapper/          (4)                #   MyBatis Mapper 接口
+│   ├── repository/      (1)                #   ChainTemplateRepository
+│   ├── dto/             (2)                #   ChainTemplate, TemplateNode
+│   ├── service/         (8)                #   ReActAgent, AgentChain, ChainValidation/Optimization/Template, AgentTask, ToolTest
+│   └── tool/            (19)               #   Tool 接口 + ToolManager + 16 个内置工具
+│
+├── knowledge/                              # 知识库领域
+│   ├── entity/          (3)                #   KnowledgeBase, KnowledgeDocument, KnowledgeChunk
+│   ├── mapper/          (3)                #   MyBatis Mapper 接口
+│   ├── model/           (4)                #   VectorRecord, SearchRequest, CollectionRequest, FieldSchema
+│   └── service/         (6)                #   KnowledgeBaseService, KnowledgeSearchService, MilvusService, MilvusNativeService, TextSplitterService, PdfParserService
+│
+├── workflow/                               # 工作流领域
+│   ├── entity/          (3)                #   WorkflowDefinition, WorkflowInstance, WorkflowNodeInstance
+│   ├── mapper/          (3)                #   MyBatis Mapper 接口
+│   └── service/         (2)                #   WorkflowDefinitionService, WorkflowEngineService
+│
+├── multimodal/                             # 多媒体领域
+│   └── service/         (5)                #   VisionService, SpeechRecognitionService, TextToSpeechService, OcrService, ImageGenerationService
+│
+├── system/                                 # 系统管理领域
+│   ├── entity/          (5)                #   User, Role, Permission, UserRole, RolePermission
+│   ├── mapper/          (3)                #   UserMapper, RoleMapper, PermissionMapper
+│   ├── dto/             (5)                #   LoginRequest, LoginResponse, Ollama DTO
+│   └── service/         (4)                #   AuthService, RateLimitService, PerformanceMonitorService, LocalModelService
+│
+└── task/                                   # 异步任务领域
+    ├── entity/          (1)                #   AsyncTaskEntity
+    ├── mapper/          (1)                #   AsyncTaskMapper
+    └── service/         (2)                #   TaskQueueService, TaskExecutorService
 ```
 
----
+**资源文件**
 
-## 📖 API 文档
+```
+src/main/resources/
+├── application.yml                         # 主配置文件
+├── mapper/                                 # MyBatis XML (8 个)
+│   ├── ChatSessionMapper.xml
+│   ├── ChatMessageMapper.xml
+│   ├── ChatSessionSummaryMapper.xml
+│   ├── ChatSessionTagMapper.xml
+│   ├── ChatMessageFavoriteMapper.xml
+│   ├── AgentTaskMapper.xml
+│   ├── AgentTaskLogMapper.xml
+│   └── ChainTemplateMapper.xml
+└── db/
+    └── migration/                          # Flyway 数据库迁移 (5 个版本)
+```
 
-### 主要接口
+## API 接口一览
 
-| 模块 | 路径前缀 | 说明 |
-|------|----------|------|
+| 模块 | 路径 | 说明 |
+|------|------|------|
 | 认证 | `/api/auth` | 登录/注册/Token |
-| AI 聊天 | `/api/ai` | 对话/补全 |
-| 会话管理 | `/api/session` | 会话 CRUD/分享/合并 |
+| AI 聊天 | `/api/ai` | 对话/补全/流式 |
+| 会话管理 | `/api/session` | 会话 CRUD/分享/合并/模板 |
 | 消息 | `/api/message` | 消息 CRUD/收藏/搜索 |
-| 知识库 | `/api/knowledge` | 知识库/检索/RAG |
-| 本地模型 | `/api/local-model` | Ollama 模型管理 |
-| Milvus | `/api/milvus` | 向量操作 |
-| 多媒体 | `/api/multimedia` | OCR/图片处理 |
+| 知识库 | `/api/knowledge` | 知识库 CRUD/语义检索 |
+| Agent | `/api/agent` | ReAct/工具链/多 Agent 协作 |
+| 工作流 | `/api/workflow` | 工作流定义/执行 |
+| Milvus | `/api/milvus` | 向量 CRUD/搜索 |
+| 多媒体 | `/api/multimedia` | OCR/图像处理 |
 | 语音 | `/api/speech` | ASR/TTS |
 | 视觉 | `/api/vision` | 图像识别 |
-| 工作流 | `/api/workflow` | 工作流定义/执行 |
-| 任务 | `/api/task` | 任务队列 |
-| Agent | `/api/agent` | Agent 链/工具 |
-| 监控 | `/api/monitor` | 系统监控 |
-| 系统 | `/api/system` | 系统信息 |
+| 本地模型 | `/api/local-model` | Ollama 模型管理 |
+| 任务 | `/api/task` | 异步任务队列 |
+| 监控 | `/api/monitor` | Token 用量/性能监控 |
+| 系统 | `/api/system` | 系统信息/会话统计 |
 
-### WebSocket
+**WebSocket**
 
 ```
 ws://localhost:8081/ws/session/{sessionId}
 ```
 
-实时聊天消息推送。
+## 外部依赖
 
----
+### 必需
 
-## ❓ 常见问题
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| MySQL | 3306 | 数据库 |
+| Redis | 6379 | 缓存/会话 |
 
-### Q1: OCR 识别失败，提示"Tesseract 未安装"
+### 可选
 
-```bash
-# macOS
-brew install tesseract tesseract-lang
+| 服务 | 端口 | 说明 | 启用方式 |
+|------|------|------|----------|
+| Milvus | 19530 | 向量数据库 | `milvus.enabled: true` |
+| Ollama | 11434 | 本地 LLM | `langchain4j.ollama.enabled: true` |
+| Tesseract | - | OCR 引擎 | `ocr.enabled: true` |
+| Whisper | - | 语音识别 | `asr.enabled: true` |
+| Edge TTS | - | 语音合成 | `tts.enabled: true` |
 
-# 验证
-tesseract --version
-
-# 安装中文语言包
-# tesseract-lang 已包含所有语言
-```
-
-### Q2: 语音识别报错"Whisper 未安装"
-
-```bash
-pip install openai-whisper
-
-# 如果 pip 找不到命令
-pip3 install openai-whisper
-
-# 或使用 conda
-conda install -c conda-forge openai-whisper
-```
-
-### Q3: TTS 合成失败
-
-```bash
-# 安装 Edge TTS
-pip install edge-tts
-
-# 测试
-edge-tts --voice zh-CN-XiaoxiaoNeural --text "测试" --write-media test.mp3
-```
-
-### Q4: Milvus 连接失败
-
-```bash
-# 检查 Milvus 是否运行
-docker ps | grep milvus
-
-# 重启 Milvus
-docker restart milvus-standalone
-
-# 检查防火墙
-telnet localhost 19530
-```
-
-### Q5: Ollama 模型拉取慢
-
-```bash
-# 使用国内镜像
-export OLLAMA_MIRROR=https://ollama.ainav.cn
-
-# 或手动下载模型文件后导入
-```
-
-### Q6: 数据库连接失败
-
-```bash
-# 检查 MySQL 是否运行
-docker ps | grep mysql
-
-# 检查配置
-# application.yml 中的数据库密码是否匹配
-
-# 创建数据库
-docker exec -it ai-framework-mysql mysql -uroot -pMyNewPass123! -e "CREATE DATABASE IF NOT EXISTS ai_framework;"
-```
-
----
-
-## 📝 开发笔记
-
-### 添加新工具
-
-1. 实现 `Tool` 接口
-2. 在 `ToolManager` 中注册
-3. 在 Agent 链中配置使用
-
-### 添加新 LLM 提供商
-
-1. 在 `application.yml` 添加配置
-2. 创建对应的 `AiService` 实现
-3. 更新 `LangChain4jConfig`
-
----
-
-## 📄 License
+## License
 
 MIT License
-
----
-
-## 🙏 致谢
-
-- [LangChain4j](https://github.com/langchain4j/langchain4j)
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [通义千问](https://dashscope.aliyun.com/)
-- [Ollama](https://ollama.com/)
-- [Milvus](https://milvus.io/)
-
----
-
-_最后更新：2026-04-09_

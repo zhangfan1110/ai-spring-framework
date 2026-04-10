@@ -1,7 +1,7 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.service.SpeechRecognitionService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.multimodal.service.SpeechRecognitionService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

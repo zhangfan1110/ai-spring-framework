@@ -1,10 +1,10 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.dto.LoginRequest;
-import com.example.aiframework.dto.LoginResponse;
-import com.example.aiframework.entity.UserEntity;
-import com.example.aiframework.service.AuthService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.system.dto.LoginRequest;
+import com.example.aiframework.system.dto.LoginResponse;
+import com.example.aiframework.system.entity.UserEntity;
+import com.example.aiframework.system.service.AuthService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

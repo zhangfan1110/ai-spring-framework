@@ -1,9 +1,9 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.service.LocalModelService;
-import com.example.aiframework.dto.LocalModelService_ModelResponse;
-import com.example.aiframework.service.LocalModelService.StreamCallback;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.system.service.LocalModelService;
+import com.example.aiframework.system.dto.LocalModelService_ModelResponse;
+import com.example.aiframework.system.service.LocalModelService.StreamCallback;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

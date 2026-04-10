@@ -1,8 +1,8 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.service.PerformanceMonitorService;
-import com.example.aiframework.service.TokenUsageService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.system.service.PerformanceMonitorService;
+import com.example.aiframework.chat.service.TokenUsageService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

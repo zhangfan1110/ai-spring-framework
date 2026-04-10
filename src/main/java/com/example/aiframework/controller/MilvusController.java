@@ -1,11 +1,11 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.model.CollectionRequest;
-import com.example.aiframework.model.SearchRequest;
-import com.example.aiframework.model.VectorRecord;
-import com.example.aiframework.service.MilvusService;
-import com.example.aiframework.service.PdfParserService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.knowledge.model.CollectionRequest;
+import com.example.aiframework.knowledge.model.SearchRequest;
+import com.example.aiframework.knowledge.model.VectorRecord;
+import com.example.aiframework.knowledge.service.MilvusService;
+import com.example.aiframework.knowledge.service.PdfParserService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

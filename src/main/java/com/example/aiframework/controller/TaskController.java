@@ -1,8 +1,8 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.entity.AsyncTaskEntity;
-import com.example.aiframework.service.TaskQueueService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.task.entity.AsyncTaskEntity;
+import com.example.aiframework.task.service.TaskQueueService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

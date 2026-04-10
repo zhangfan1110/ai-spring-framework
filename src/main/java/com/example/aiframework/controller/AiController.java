@@ -1,15 +1,15 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.entity.ChatMessageEntity;
-import com.example.aiframework.entity.ChatSessionEntity;
-import com.example.aiframework.entity.ChatSessionSummaryEntity;
-import com.example.aiframework.model.ChatRequest;
-import com.example.aiframework.model.ChatResponse;
-import com.example.aiframework.model.MessageEditRequest;
-import com.example.aiframework.service.ChatService;
-import com.example.aiframework.service.RagMemoryService;
-import com.example.aiframework.service.SessionSummaryService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.chat.entity.ChatMessageEntity;
+import com.example.aiframework.chat.entity.ChatSessionEntity;
+import com.example.aiframework.chat.entity.ChatSessionSummaryEntity;
+import com.example.aiframework.chat.model.ChatRequest;
+import com.example.aiframework.chat.model.ChatResponse;
+import com.example.aiframework.chat.model.MessageEditRequest;
+import com.example.aiframework.chat.service.ChatService;
+import com.example.aiframework.chat.service.RagMemoryService;
+import com.example.aiframework.chat.service.SessionSummaryService;
+import com.example.aiframework.common.util.Result;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;

@@ -1,10 +1,10 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.service.ImageGenerationService;
-import com.example.aiframework.service.OcrService;
-import com.example.aiframework.service.OcrService.OcrResult;
-import com.example.aiframework.service.TextToSpeechService;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.multimodal.service.ImageGenerationService;
+import com.example.aiframework.multimodal.service.OcrService;
+import com.example.aiframework.multimodal.service.OcrService.OcrResult;
+import com.example.aiframework.multimodal.service.TextToSpeechService;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

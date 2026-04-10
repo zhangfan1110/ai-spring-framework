@@ -1,13 +1,13 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.dto.ChainTemplate;
-import com.example.aiframework.dto.TemplateNode;
-import com.example.aiframework.service.*;
-import com.example.aiframework.service.ReActAgentService.AgentRole;
-import com.example.aiframework.service.ReActAgentService.CollaborationSession;
-import com.example.aiframework.service.ReActAgentService.StreamEvent;
-import com.example.aiframework.service.ReActAgentService.ToolChain;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.agent.dto.ChainTemplate;
+import com.example.aiframework.agent.dto.TemplateNode;
+import com.example.aiframework.agent.service.*;
+import com.example.aiframework.agent.service.ReActAgentService.AgentRole;
+import com.example.aiframework.agent.service.ReActAgentService.CollaborationSession;
+import com.example.aiframework.agent.service.ReActAgentService.StreamEvent;
+import com.example.aiframework.agent.service.ReActAgentService.ToolChain;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;

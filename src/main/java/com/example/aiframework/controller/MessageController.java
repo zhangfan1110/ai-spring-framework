@@ -1,11 +1,11 @@
 package com.example.aiframework.controller;
 
-import com.example.aiframework.entity.ChatMessageEntity;
-import com.example.aiframework.entity.ChatMessageFavoriteEntity;
-import com.example.aiframework.service.FavoriteService;
-import com.example.aiframework.service.MessageSearchService;
-import com.example.aiframework.service.MessageSearchService.SearchResult;
-import com.example.aiframework.util.Result;
+import com.example.aiframework.chat.entity.ChatMessageEntity;
+import com.example.aiframework.chat.entity.ChatMessageFavoriteEntity;
+import com.example.aiframework.chat.service.FavoriteService;
+import com.example.aiframework.chat.service.MessageSearchService;
+import com.example.aiframework.chat.service.MessageSearchService.SearchResult;
+import com.example.aiframework.common.util.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
